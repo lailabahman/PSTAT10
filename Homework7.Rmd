@@ -1,0 +1,41 @@
+**Exercise 1**
+```{r}
+library(DBI)
+library(RSQLite)
+Tiny_Clothes <- dbConnect(RSQLite::SQLite(), "Tiny_Clothes.sqlite")
+dbGetQuery(Tiny_Clothes, "SELECT EMP_NO,OFFICE,EXTENSION FROM employee_phone")
+dbGetQuery(Tiny_Clothes, "SELECT ORDER_NO,PROD_NO,QUANTITY,PRICE from invoices")
+dbGetQuery(Tiny_Clothes, "Select PROD_NO,NAME,COLOR from PRODUCT")
+dbGetQuery(Tiny_Clothes,"select ORDER_NO,DATE,CUST_NO from SALES_ORDER")
+dbGetQuery(Tiny_Clothes, "select ORDER_NO,PROD_NO,QUANTITY from SALES_ORDER_LINE")
+dbGetQuery(Tiny_Clothes, "select PROD_NO,QUANTITY from STOCK_TOTAL")
+```
+**Exercise 2**
+```{r}
+dbGetQuery(Tiny_Clothes, "select EMP_NO,AGE from EMPLOYEE where AGE < 50")
+```
+**Exercise 3**
+```{r}
+dbGetQuery(Tiny_Clothes, "select NAME from EMPLOYEE")
+```
+**Exercise 4**
+```{r}
+dbGetQuery(Tiny_Clothes, "select distinct NAME from EMPLOYEE")
+```
+**Exercise 5**
+```{r}
+dbGetQuery(Tiny_Clothes, "select NAME from EMPLOYEE where NAME like 'B%'")
+```
+**Exercise 6**
+```{r}
+dbGetQuery(Tiny_Clothes, "select AGE,NAME from EMPLOYEE where NAME like '%R%'")
+```
+**Exercise 7**
+```{r}
+dbGetQuery(Tiny_Clothes, "select NAME,NI_NO from EMPLOYEE")
+```
+**Exercise 8**
+```{r}
+dbGetQuery(Tiny_Clothes, "select EMP_NO,NI_NO,NAME,AGE,DEPT_NO from EMPLOYEE where AGE >= 31 and AGE <= 65")
+```
+

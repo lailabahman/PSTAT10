@@ -1,0 +1,108 @@
+**Exercise 1: Connecting to the database**
+```{r}
+# Necessary Packages
+library(DBI)
+library(RSQLite)
+
+# Connect to DB
+drv <- dbDriver("SQLite")
+chinook_db <- dbConnect(drv, dbname="Chinook_Sqlite.sqlite")
+```
+**Exercise 2: Exploring the Database**
+(a) What is the average length of a track in the album with AlbumId = 160?
+```{r}
+dbGetQuery(chinook_db, "select * from track limit 5")
+
+dbGetQuery(chinook_db, "select avg(milliseconds)
+           from track
+           where AlbumId = 160")
+
+dbGetQuery(chinook_db, "select AlbumId, avg(milliseconds) as avg_len
+           from track
+           group by AlbumId
+           having AlbumId != 160")
+
+dbGetQuery(chinook_db, "select AlbumId, avg(milliseconds) as avg_len
+           from track
+           where AlbumId != 160
+           group by AlbumId")
+
+# the second one is faster because you already remove one of the entries before grouping, which takes a long time. otherwise they both return the same output
+```
+(b) Why is the following code incorrect in finding the average length of tracks for each albums with AlbumId between 250 and 255, inclusive?
+
+dbGetQuery(chinook_db,"SELECT AVG(Milliseconds) FROM track WHERE AlbumId >= 250 AND AlbumId <= 255")
+
+# This is wrong because we are not finding the average of all of the tracks combined, but we are trying to find the average track length of each individual album, so we will need to use group by
+
+(c) Write code to find the average length of tracks for each albums with AlbumId between 250 and 255, inclusive, by using a WHERE clause
+```{r}
+dbGetQuery(chinook_db, "select albumid, avg(milliseconds)
+           from track
+           where albumid between 250 and 255
+           group by albumid")
+```
+(d) Write code to find the average length of tracks for each albums with AlbumId between 250 and 255, inclusive, by using a HAVING clause
+```{r}
+dbGetQuery(chinook_db, "select albumid, avg(milliseconds)
+           from track
+           group by AlbumId
+           having AlbumId between 250 and 255")
+```
+(e) Find the total number of tracks for albums with albumid between 10 and 15 inclusive. (Use an alias so the output is easy to read)
+```{r}
+dbGetQuery(chinook_db, "select albumid, count(*) as Num_of_Tracks
+           from track
+           where albumid between 10 and 15
+           group by albumid")
+```
+**Exercise 3: Exploring the Database**
+(a) In a single query, return the track id, track name, album id, mediatype id, and mediatype name of all tracks with AlbumId = 10.
+```{r}
+dbGetQuery(chinook_db, "select * from track")
+dbGetQuery(chinook_db, "select * from mediatype")
+
+dbGetQuery(chinook_db,
+           "select Track.TrackId, Track.Name, AlbumId, MediaType.MediaTypeId, MediaType.Name
+           from Track inner join MediaType
+           using MediaTypeId")
+
+dbGetQuery(chinook_db,
+           "select Track.TrackId, Track.Name, AlbumId, MediaType.MediaTypeId, MediaType.Name
+           from Track inner join MediaType
+           on Track.MediaTypeId = MediaType.Id and Track.C <= MediaType.B")
+
+dbGetQuery(chinook_db,
+           "select Track.TrackId, Track.Name, AlbumId, MediaType.MediaTypeId, MediaType.Name
+           from Track inner join MediaType
+           on Track.MediaTypeId = MediaType.MediaTypeId
+           where AlbumId = 10")
+```
+(b) Produce the following relation with a three-way join.
+```{r}
+dbGetQuery(chinook_db,
+           "select track.trackid, track.name as TrackName,
+           track.albumid, album.title as AlbumTitle,
+           genre.name as Genre from track
+           inner join album on track.albumid = album.albumid
+           inner join genre on track.genreid = genre.genreid
+           where track.albumid = 250
+           limit 5")
+```
+(c) Retrieve the average track size for all tracks in each genre, along with the name of the genre. Your output will look somewhat like this:
+```{r}
+dbGetQuery(chinook_db,
+           "select avg(bytes) as AvgBytes, t.genreid, g.name as GenreName
+           from Track t inner join Genre g
+           on t.genreid = g.genreid
+           group by t.genreid")
+```
+**Exercise 4: Your own SQL query**
+```{r}
+
+```
+**Exercise 6: Don’t forget to close the connection to the database**
+```{r}
+
+```
+

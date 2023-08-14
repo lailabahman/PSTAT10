@@ -1,0 +1,71 @@
+```{r}
+labels <- c(1,2,3,4,5)
+prob <- c(0, 0.4, 0.1, 0.03)
+# a, find missing prob a
+tot_prob <- 1
+curr_sum <- sum(prob)
+missing_val <- tot_prob - curr_sum
+missing_val
+prob <- append(prob, missing_val, 1)
+prob
+names(prob) <- labels
+
+
+#prob b P(x<2)
+# find positions where x<2 using which function and sum of all probability that satisfy those conditions
+sum(prob[which(labels<2)])
+
+# c P(x >= 2)
+sum(prob[which(labels>=2)])
+
+# d mean of x
+# mean = (p(x=1)*1 + p(x=2)*2 + ...p(x=5)*5)/(p(x=1) + p(x=2) + ...p(x=5))
+mean_x <- sum(labels * prob)/sum(prob)
+mean_x
+
+# e mean of x^2
+mean_x2 <- sum(labels^2 * prob)/sum(prob)
+mean_x2
+
+# f variance of x
+# E(x^2) - E(x)^2
+mean_x2 - mean_x^2
+
+# g cumulative distribution
+cumsum(prob)
+```
+```{r}
+# Q 2
+# P(A) = 0.35
+# P(B) = 0.7
+# P(A & B)  = 0.25
+# a - b does not occur = 1 - P(B) = 1 - 0.7 = 0.3
+# b - a or B = P(A) + P(B) - P(A & B) = 0.35 + 0.7 - 0.25 = 0.8
+```
+
+```{r}
+# Q 3
+
+# a. i = 4/52
+# a. ii = 1/52
+
+# b
+# A - card is a club (13)
+# B - card is red (26)
+# P(A|B) = P(A) = 13/52
+# P(A n B) = P(A) * P(B)
+# P(A|B) = P(A n B) / P(B)
+
+# c - without replacement
+# as you remove the card and don't replace, probability gets affected
+# 13/51
+# P(A n B) / P(B) = (13/52 * 26/51) / (26/52)
+
+# d
+# C - face card - 12
+# D - black - 26
+# black and face = 3 cards from spades and clubs = 6
+# 6/52
+# not mutually exclusive, there is dependency
+```
+

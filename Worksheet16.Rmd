@@ -1,0 +1,32 @@
+1. Find the phone extension for all employees named BROWN.
+```{r}
+# Necessary Packages
+library(DBI)
+library(RSQLite)
+
+# Connect to DB
+drv <- dbDriver("SQLite")
+Tiny_Clothes <- dbConnect(drv, dbname="Tiny_Clothes.sqlite")
+dbListTables(Tiny_Clothes)
+Tiny_Clothes <- dbConnect(RSQLite::SQLite(), "Tiny_Clothes.sqlite")
+
+
+dbGetQuery(Tiny_Clothes, "select employee.emp_no, name, extension
+           from employee
+           join employee_phone
+           on employee.emp_no = employee_phone.emp_no
+           where name = 'BROWN'")
+```
+2. Find the name and phone extension of the ACCOUNTS manager.
+```{r}
+dbGetQuery(Tiny_Clothes, "select * from department")
+dbGetQuery(Tiny_Clothes, "select * from employee")
+dbGetQuery(Tiny_Clothes, "select * from employee_phone")
+```
+3. Find the names and phone extension of all employees who share an office.
+
+4. Choosing a suitable customer number, add a new customer Charles, whose address is ATLANTIC to the database.
+
+5. What are the attribute names of CUSTOMER?
+
+6. What are the data types of attributes of PRODUCT?

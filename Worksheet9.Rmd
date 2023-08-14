@@ -1,0 +1,154 @@
+```{r}
+# Q1
+E <- matrix(c(1:10),nrow=2,ncol=5) #default byrow = FALSE, so fills by col
+# 1 2 3 4 5
+# 6 7 8 9 10
+
+# 1 3 5 7 9
+# 2 4 6 8 10
+
+E
+
+apply(E, 2, sum)
+# 2 means column, 1 means row
+# (1,2) means rows and columns for array as it has multiple matrices
+
+# Option B is the correct answer
+```
+```{r}
+# Q2
+matrix(1:12,2,3)
+#matrix(data=1:12, nrow=2, ncol=3, byrow = TRUE)
+# get a warning, but still get data
+
+matrix(c(1:12), nrow = 2, ncol = 4)
+# get a warning, but still get data
+
+matrix(1:3, nrow = 3, ncol = 3)
+# once elements assigned have been exhausted, will restart and reuse elements
+# get a warning, but still get data
+
+matrix(2:3, nrow = 3, ncol = 3)
+# get a warning, but still get data
+
+# all valid, but if the question asks which one is a valid assignment, C is the correct choice
+```
+```{r}
+# Q3
+x <- c("a", "b", "c", "c", "d", "a")
+x[3:4]
+# c extracts 3rd and 4th
+```
+```{r}
+# Q4
+X <- seq(from=10, to=14, by=1)
+X
+X1 <- 10:14
+X1
+X2 <- c(10,14)
+X2
+X3 <- seq(10:14)
+X3
+# Correct answer is A (X1)
+```
+```{r}
+# Q5
+z <- c(1, 7, 2, 3, 1, 8, 13)
+# only a parameter for decreasing, so option C
+sort(z, decreasing = TRUE)
+```
+```{r}
+# Q6
+is.data.frame(CO2)
+# Option C is correct
+```
+```{r}
+# Q7
+X <- na.omit(c(22,3,7,NA,NA,67))
+X
+# Option A is correct (4)
+```
+```{r}
+# Q8
+x <- 1:3
+y <- 10:12
+cbind(x,y)
+# Option C is correct
+```
+```{r}
+# Q9
+# Options A and B (internat speed and Temperature) are nominal
+```
+
+```{r}
+# Q10
+x <- c(1, 1, 2, 4, 20, 20, 20, 20, 20, 20, 20)
+mean(x)
+median(x)
+hist(x, breaks = 20)
+# option A is correct, mean smaller than median and hist is left-skewed
+```
+```{r}
+# Q11
+# x[1] extracts fist element of vector x, B is correct 
+```
+
+```{r}
+# Q12
+x<-seq(from =10, to = 5, by = -0.5)
+# AP
+# a = 10, d = -0.5
+# nth element = a + (n-1) * d
+# 4th = 10 + 3 * -0.5 = 8.5
+x[4]
+# option b 8.5 is correct
+```
+```{r}
+# Q13
+X <- c("Fried", "Chicken")
+# output should be chr [1:2] "Fried" "Chicken"
+# this is bc we have string of X, not just X
+# str tells us the type print doesn't
+str(X)
+# option A is correct
+```
+```{r}
+# Q14
+X <- data.frame(A = 1:4, B = c("1","2","3","4"))
+X
+# Option A is correct
+```
+```{r}
+# Q15
+data <- data.frame(x=c(1,2,3), y=c(5, NA, 8))
+data
+na.omit(data)
+```
+```{r}
+# Q16
+ z<-c(2,5,3,7,9)
+sd(z)
+```
+```{r}
+# Q17
+# option A
+```
+
+```{r}
+# Q18
+# option C getwd()
+```
+
+```{r}
+# Q19
+a <- c(T,T,F,F)
+b <- c("T","T","F","F")
+c <- -1:2 #c(-1, 0, 1, 2) -> c(T, F, T, T)
+a & c -> c(T, F, F, F)
+# a & b
+
+a & c
+a
+# ERROR, not compatible
+```
+

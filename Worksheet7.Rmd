@@ -1,0 +1,41 @@
+```{r}
+batman <- read.csv("Batman_Movies.txt")
+batman
+```
+```{r}
+getwd()
+```
+```{r}
+avg_val <- mean(batman$Rotten.Tomatoes)
+good_batman <- batman[batman$Rotten.Tomatoes>avg_val,] # don't put anything after the comma for the whole data frame
+good_batman
+```
+```{r}
+write.csv(good_batman, "Good_Batman_Movies.csv", row.names = FALSE)
+```
+
+```{r}
+IMDB_norm <- good_batman$IMDb/max(good_batman$IMDb)
+RT_norm <- good_batman$Rotten.Tomatoes/max(good_batman$Rotten.Tomatoes)
+IMDB_norm
+RT_norm
+```
+
+```{r}
+abs(IMDB_norm - RT_norm) # element wise subtraction
+```
+
+```{r}
+diff(good_batman$IMDb)
+diff(good_batman$Rotten.Tomatoes)
+```
+```{r}
+IMDB_diff <- diff(IMDB_norm)
+RT_diff <- diff(RT_norm)
+mat <- cbind(IMDB_diff, RT_diff)
+x_axis <- good_batman$Year[-1] # ignoring the first element
+matplot(x_axis, mat, type = "b", xlab = "Year", ylab = "YOY change")
+# RT was more or less stable until last year
+# IMDB was fluctuating all through and has a cup shape
+```
+

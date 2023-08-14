@@ -1,0 +1,76 @@
+1. Write an SQL query, with correlation names, to produce the following output.
+```{r}
+# Necessary Packages
+library(DBI)
+library(RSQLite)
+
+# Connect to DB
+drv <- dbDriver("SQLite")
+Tiny_Clothes <- dbConnect(drv, dbname="Tiny_Clothes.sqlite")
+dbListTables(Tiny_Clothes)
+Tiny_Clothes <- dbConnect(RSQLite::SQLite(), "Tiny_Clothes.sqlite")
+
+dbGetQuery(Tiny_Clothes, "SELECT product.PROD_NO, NAME, COLOR, ORDER_NO, QUANTITY 
+                           FROM product 
+                           JOIN sales_order_line 
+                           ON product.PROD_NO = sales_order_line.PROD_NO")
+```
+2. Choose primary keys and foreign keys for the relations:
+CUSTOMER, PRODUCT, SALES_ORDER and SALES_ORDER_LINE
+
+CUSTOMER:
+Primary key: CUST_NO
+Foreign key: none
+
+PRODUCT:
+Primary key: PROD_NO
+Foreign key: none
+
+SALES_ORDER:
+Primary key: ORDER_NO
+Foreign key: CUST_NO
+
+SALES_ORDER_LINE:
+Primary key: ORDER_NO, PROD_NO
+Foreign key: ORDER_NO, PROD_NO
+
+3. Retrieve details of employees who are between 31 years of age and 65 years of age.
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT * FROM employee WHERE age BETWEEN 31 and 65")
+```
+4. How many customers does ‘Tiny Clothes’ have?
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT COUNT(*) as num_customers FROM customer")
+```
+5. Are there any customers in the database whose address is missing?
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT COUNT(*) as num_missing FROM customer WHERE ADDRESS IS NULL")
+
+# no addresses are missing
+```
+6. Which orders are invoiced for a quantity of 10 000 or more items?
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT ORDER_NO FROM invoices WHERE QUANTITY >= 10000")
+
+# orders 1 and 2
+```
+7. Sort EMPLOYEE by age, in descending order.
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT * FROM employee ORDER BY AGE DESC")
+
+```
+8a.  Using appropriate correlation names, retrieve all names from CUSTOMER
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT NAME FROM CUSTOMER")
+```
+8b. Modify your name to return NAME as FIRST_NAME.
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT NAME AS FIRST_NAME FROM CUSTOMER")
+```
+8c. What happens if you use FIRST NAME?
+```{r}
+dbGetQuery(Tiny_Clothes, "SELECT NAME AS FIRST NAME FROM CUSTOMER")
+
+# I get a syntax error since there is a space in the column name, which is not allowed unless quotations are used
+```
+

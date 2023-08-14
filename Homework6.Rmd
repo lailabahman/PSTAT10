@@ -1,0 +1,90 @@
+```{r}
+# 16.4 a
+
+# i 
+mean <- 17
+sd <- 4.5
+
+1-pnorm(20, mean, sd)
+# 0.2525
+
+# ii
+pnorm(10, mean, sd)-pnorm(5, mean, sd)
+# 0.0561
+
+# iii
+qnorm(0.1, mean, sd)
+# 11.23
+
+# iv
+library(ggplot2)
+x <- seq(mean - 4*sd, mean + 4*sd, 0.01)
+y <- dnorm(x, mean, sd)
+df <- data.frame(x, y)
+ggplot(df, aes(x)) +
+  geom_line(aes(y = y), linewidth = 1) +
+  geom_ribbon(data = subset(df, x <= qnorm(0.1, mean, sd)),
+              aes(ymin = 0, ymax = y),
+              fill = "red", alpha = 0.5) +
+  geom_vline(xintercept = qnorm(0.1, mean, sd),
+             linetype = "dashed", color = "red") +
+  theme_classic() +
+  xlab("Time (minutes)") +
+  ylab("Probability density") +
+  ggtitle("Normal distribution of time to complete a statistics question") +
+  xlim(mean - 4*sd, mean + 4*sd)
+```
+```{r}
+# 16.4 b
+
+# i
+# Calculate the probability of a blade of grass being between 9.5 and 11 mm long
+pnorm(11, mean = 10, sd = sqrt(2)) - pnorm(9.5, mean = 10, sd = sqrt(2))
+
+# ii
+z9.5 <- (9.5-10)/sqrt(2)
+# standardized val for 9.5 = -0.3535534
+z11 <- (11-10)/sqrt(2)
+# standardized val for 11 = 0.7071068
+pnorm(z11)-pnorm(z9.5)
+# same probability as in (i)
+
+# iii
+qnorm(0.025,10,sqrt(2))
+
+# iv
+(7.228192-10)/sqrt(2)
+```
+```{r}
+# 1 
+for (i in 1:7) {
+  print(i^3)
+}
+```
+```{r}
+# 2
+sum_naturalnumbers <- function(n) {
+  if (n > 0) {
+    sum <- n * (n + 1) / 2
+    return(sum)
+  } else {
+    print("number must be positive")
+  }
+}
+sum_naturalnumbers(6)
+sum_naturalnumbers(-3)
+```
+```{r}
+# 3
+my_function <- function(a, b) {
+  if (is.numeric(a) & is.numeric(b)) {
+    result <- a + b
+    return(result)
+  } else {
+    print("the arguments were not both numeric")
+  }
+}
+my_function(10, 20)
+my_function(10, 'cat')
+```
+

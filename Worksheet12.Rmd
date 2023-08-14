@@ -1,0 +1,51 @@
+```{r}
+library(DBI)
+library(RSQLite)
+library(sqldf)
+```
+
+```{r}
+Tiny_Clothes <- dbConnect(RSQLite::SQLite(), "Tiny_Clothes.sqlite")
+CUSTOMER <- read.csv("Tinyclothes Database Files-20230228/CUSTOMER.txt")
+EMPLOYEE <- read.csv("Tinyclothes Database Files-20230228/EMPLOYEE.txt")
+DEPARTMENT <- read.csv("Tinyclothes Database Files-20230228/DEPARTMENT.txt")
+PRODUCT <- read.csv("Tinyclothes Database Files-20230228/PRODUCT.txt")
+SALES_ORDER <- read.csv("Tinyclothes Database Files-20230228/SALES_ORDER.txt")
+SALES_ORDER_LINE <- read.csv("Tinyclothes Database Files-20230228/SALES_ORDER_LINE.txt")
+INVOICES <- read.csv("Tinyclothes Database Files-20230228/INVOICES.txt")
+EMPLOYEE_PHONE <- read.csv("Tinyclothes Database Files-20230228/EMPLOYEE_PHONE.txt")
+STOCK_TOTAL <- read.csv("Tinyclothes Database Files-20230228/STOCK_TOTAL.txt")
+```
+
+```{r eval=FALSE}
+dbWriteTable(Tiny_Clothes, "DEPARTMENT", DEPARTMENT)
+dbWriteTable(Tiny_Clothes, "CUSTOMER", CUSTOMER)
+dbWriteTable(Tiny_Clothes, "EMPLOYEE", EMPLOYEE)
+dbWriteTable(Tiny_Clothes, "PRODUCT", PRODUCT)
+dbWriteTable(Tiny_Clothes, "SALES_ORDER", SALES_ORDER)
+dbWriteTable(Tiny_Clothes, "SALES_ORDER_LINE", SALES_ORDER_LINE)
+dbWriteTable(Tiny_Clothes, "INVOICES", INVOICES)
+dbWriteTable(Tiny_Clothes, "EMPLOYEE_PHONE", EMPLOYEE_PHONE)
+dbWriteTable(Tiny_Clothes, "STOCK_TOTAl", STOCK_TOTAL)
+
+dbListTables(Tiny_Clothes)
+```
+```{r}
+dbGetQuery(Tiny_Clothes, 'SELECT DISTINCT NAME FROM EMPLOYEE WHERE NAME is "SMITH"')
+```
+```{r}
+"SELECT TOP 10 * FROM EMPLOYEE WHERE AGE > 21" 
+# * means give all the columns
+```
+```{r}
+dbGetQuery(Tiny_Clothes, 'SELECT NAME FROM DEPARTMENT
+           WHERE NAME LIKE "S%" AND NAME LIKE "%r%"')
+dbGetQuery(Tiny_Clothes, 'SELECT NAME FROM DEPARTMENT
+           WHERE NAME LIKE "S%" AND NAME LIKE"%R%"')
+
+# The query will give same result if I use "R" instead of "r"
+```
+```{r}
+#dbGetQuery(Tiny_Clothes, 'SELECT NAME, AGE, EMP_NUM)
+```
+

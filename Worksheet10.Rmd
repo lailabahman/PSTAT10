@@ -1,0 +1,46 @@
+```{r}
+# 1
+x <- seq(-4,4,length=200)
+# sequence from -4 to 4 of 200 digits each evenly spaced
+y <- dnorm(x,mean=0,sd=1)
+# vector of the values of the standard normal distribution at every value of the 200 digit seq
+z <- plot(x,y,type='l',lwd=2,col='blue')
+# normal distribution curve of x
+```
+```{r}
+# 2
+# Scores on a university exam are normally distributed with a mean of 68 and a standard deviation of 9. What is the probability that a student scores above 77?
+pnorm(77,68,9,lower.tail=FALSE)
+# 0.158
+```
+```{r}
+# 3
+# Tha random variable X is normally distributed with mean 80 and standard deviation 12.
+# a) What is the probability that a value of X chosen at random will be between 65 and 95?
+pnorm(95,80,12,lower.tail=TRUE) - pnorm(65,80,12,lower.tail=TRUE)
+# 0.788
+# b) What is the probability that a value of X chosen at random will be less than 74?
+pnorm(74,80,12,lower.tail = TRUE)
+# 0.309
+```
+```{r}
+# 4
+# The test scores of 600 students are normally distributed with a mean of 76 and standard deviation of 8. In class, we have discussed quartiles. Ask your TA to discuss percentiles. Find the 95th percentile of the distribution of test scores.
+k <- qnorm(0.95)
+k
+k* 8 + 76
+# 89.158
+```
+```{r}
+# 5
+# The Intelligence Quotient (IQ) of a person is normally distributed with mean 100 and standard deviation 16.
+# a) What percentage of the population have an IQ in the interval (84, 116)?
+pnorm(116,100,16)-pnorm(84,100,16)
+# 0.682
+# b) MENSA is an organization for people with an IQ in the top 2% of the population. What IQ should a person possess to get admitted to MENSA?
+z <- qnorm(0.98)
+z
+16*z+100
+# 132.86
+```
+

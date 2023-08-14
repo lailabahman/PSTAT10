@@ -1,0 +1,62 @@
+```{r}
+for(i in 1:20){ # i can be in a vector or matrix as well
+  print(i^2)
+}
+```
+```{r}
+i <- 1 
+while(i<=20){
+  print(i^2)
+  i <- i + 1
+}
+```
+```{r}
+# Q1
+for(i in 1:7){
+  print(i^3)
+}
+```
+```{r}
+# Q2
+target <- 100000 # set the target at 100,000
+product <- 1 # initialize the product
+count <- 0 # initialize count, the required number of terms
+while(product <= target){
+  count <- count + 1
+  product <- product * count
+  print(product)
+}
+print(count-1)
+# 1 * 2 * 3 * 4 * 5 * 6 * 7 * 8 * 9 = 362880 = crosses 100000 for the first time
+# max element before it turns out to be > 100000 = count - 1
+```
+```{r}
+# Q3
+Sum_Numbers <- function (n)
+{
+  ans <- (n*(n-1))/2
+  #print('here')
+  #print(ans)
+  return(ans)
+}
+
+Sum_Numbers(4)
+```
+```{r}
+# Q5
+i <- 1
+repeat{
+  print('PSTAT 10')
+  if (i==5){
+    break # this makes the execution come out of the loop - 'repeat'
+  }
+  i <- i + 1 # increases by 1 each iteration
+}
+```
+```{r}
+# Q6
+head(faithful)
+head(faithful)$eruptions
+ifelse(head(faithful)$eruptions<3, 'short', 'long')
+```
+

@@ -1,0 +1,94 @@
+**Exercise 1: Connecting to the database**
+Load the necessary packages and open a connection to the Chinook database housed in the sqlite file in the data folder
+```{r}
+# Necessary Packages
+library(DBI)
+library(RSQLite)
+
+# Connect to DB
+drv <- dbDriver("SQLite")
+chinook_db <- dbConnect(drv, dbname="Chinook_Sqlite.sqlite")
+dbListTables(chinook_db)
+```
+**Exercise 2: (Optional) Warming Up**
+(a) Know the field names: What are the names of all the fields for every track?
+```{r}
+dbListFields(chinook_db, "track")
+```
+(b) Look at first five records for TrackId, Name, AlbumId, and Milliseconds.
+```{r}
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Milliseconds
+           from track
+           limit 5") # limits the output to first 5 entries
+
+```
+**Exercise 3: Logicals in WHERE clause**
+(a) Find all tracks shorter than 30,000ms (= 30s)
+```{r}
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Milliseconds from track where Milliseconds < 30000")
+```
+(b) Retrieve tracks shorter than 30,000ms from the album with AlbumId = 18 by using “and” in the WHERE clause
+```{r}
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Milliseconds from track where Milliseconds < 30000 and AlbumId = 18")
+```
+(c) Retrieve all tracks either shorter than 30,000ms or with AlbumId = 18
+```{r}
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Milliseconds from track where Milliseconds < 30000 or AlbumId = 18")
+```
+(d) Retrieve tracks shorter than 30,000ms from albums other than AlbumId = 18 in three ways
+
+1. Use “not AlbumId = 18” in WHERE clause
+2. Use the standard SQL “not” operator <> in WHERE clause
+3. Use the SQLite “not” operator != in WHERE clause
+
+Check that all three return the same result. Since SQLite is a lightweight database, SQLite specific SQL like the != won’t work with other RDBMS. So it’s better to stick with the standard SQL syntax so that your SQL statements can be moved over to other RDBMS’s without changes (pretty much like PDF is standard file format that works on all computer systems)
+```{r}
+# 1
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Milliseconds from track where Milliseconds < 30000 and not AlbumId = 18")
+
+# 2
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Milliseconds from track where Milliseconds < 30000 and AlbumId <> 18")
+
+# 3
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Milliseconds from track where Milliseconds < 30000 and AlbumId != 18")
+```
+(e) Retrieve the TrackId, Name, AlbumId, and Bytes for all tracks between 300,000,000 and 400,000,000 bytes (approx between 286MB and 381MB)
+```{r}
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId, Bytes from track where Bytes < 400000000 and Bytes > 300000000")
+```
+**Exercise 4: Other quirks in WHERE clause**
+(a) String-within-String in R: Find all tracks named “Branch Closing”. (Note: You’ll need to use single quotes ‘Branch Closing’ to avoid getting R confused with " of the sql statement)
+```{r}
+dbGetQuery(chinook_db, "select TrackId, Name, AlbumId from track where Name = 'Branch Closing'")
+```
+(b) SQL is case-insensitive: Have you noticed this? Try writing any of your previous SQL queries by changing upper case to lower case or vice-versa for all or any part of the SQL query. Does it work? If needed, remember to change the R code chunk options to allow you to knit your document to submit it.
+```{r}
+dbGetQuery(chinook_db, "SELECT Trackid, Name, AlbumId FROM TRACK where name = 'Branch Closing'")
+```
+(c) Try running
+SeLecT tRaCkiD, nAmE, aLbUmId FrOm TrAcK
+
+wHeRe NaMe = 'BrAnCh ClOsInG'
+
+as your SQL query. Make sure you interpret what is returned and why. If needed, remember to change the R code chunk options to allow you to knit your document to submit it.
+```{r}
+dbGetQuery(chinook_db, "SeLecT tRaCkiD, nAmE, aLbUmId FrOm TrAcK wHeRe NaMe = 'BrAnCh ClOsInG'")
+
+# nothing is returned because there is nothing named 'BrAnCh ClOsInG', the name is case sensitive while the query is not
+```
+**Exercise 5: Your own SQL query**
+Write your SQL query that uses GROUPBY, WHERE And HAVING and describe in words what your query is doing. You may choose another table to query if you like.
+```{r}
+dbGetQuery(chinook_db, "Select title, city, count(employeeid) as 'Num_Employees'
+           from employee
+           where city = 'Calgary'
+           group by title
+           having count(employeeid) > 1")
+# This query is using the Employee table. We want to know the number of employees
+# grouped by their job title located in Calgary
+```
+**Exercise 6: Don’t forget to close the connection to the database**
+```{r}
+dbDisconnect(chinook_db)
+```
+

@@ -1,0 +1,197 @@
+**Exercise 1: **
+Load the necessary packages and open a connection to the Chinook database housed in the sqlite file in the data folder.
+```{r}
+# Necessary Packages
+library(DBI)
+library(RSQLite)
+
+# Connect to DB
+drv <- dbDriver("SQLite")
+chinook_db <- dbConnect(drv, dbname="Chinook_Sqlite.sqlite")
+dbListTables(chinook_db)
+```
+**Exercise 2: Terminology**
+
+a) 
+Primary keys uniquely identify records (rows) in a table
+Foreign keys establish relationships between tables. takes you from one table to the primary key of another
+
+b)
+primary/ foreign key relationships model real world relationships often seen between related objects
+
+c)
+SQL - Structure Query Language. This is a programming language that allows us to interact with relational databases.
+
+SQLite - a specific implementation of SQL  (has many different implementations with unique features)
+
+RSQLite - Package within R which allows us to run SQL queries. SQLite Interface for R
+
+**Exercise 3: Tables and Foreign Keys**
+(a) List all tables in the database
+```{r}
+dbListTables(chinook_db)
+```
+b) List all of the foreign key relationships in the database. How many are there in all?
+Write out these relationships in the following format:
+TableName.ForeignKey -> TargetTableName.PrimaryKey
+```{r}
+dbGetQuery(chinook_db, "pragma table_info('Album')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Album')")
+dbGetQuery(chinook_db, "pragma table_info('Artist')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Artist')")
+dbGetQuery(chinook_db, "pragma table_info('Customer')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Customer')")
+dbGetQuery(chinook_db, "pragma table_info('Employee')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Employee')")
+dbGetQuery(chinook_db, "pragma table_info('Genre')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Genre')")
+dbGetQuery(chinook_db, "pragma table_info('Invoice')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Invoice')")
+dbGetQuery(chinook_db, "pragma table_info('InvoiceLine')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('InvoiceLine')")
+dbGetQuery(chinook_db, "pragma table_info('MediaType')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('MediaType')")
+dbGetQuery(chinook_db, "pragma table_info('Playlist')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Playlist')")
+dbGetQuery(chinook_db, "pragma table_info('PlaylistTrack')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('PlaylistTrack')")
+dbGetQuery(chinook_db, "pragma table_info('Track')")
+dbGetQuery(chinook_db, "pragma foreign_key_list('Track')")
+```
+```{r}
+
+```
+
+```{r, results = FALSE}
+tables <- dbListTables(chinook_db)
+
+tables
+for (tbl in tables){
+  print(dbGetQuery(chinook_db, paste0("pragma foreign_key_list(",tbl,")")))
+}
+
+```
+1. Album.ArtistID -> Artist.ArtistID
+2. Customer.SupportRepId -> Employee.EmployeeId
+3. Employee.ReportsTo -> Employee.EmployeeId
+4. Invoice.CustomerId -> Customer.CustomerId
+5. InvoiceLine.TrackId -> Track.TrackId
+6. InvoiceLine.InvoiceId -> Invoice.InvoiceId
+7. PlaylistTrack.TrackId -> Track.TrackId
+8. PlaylistTrack.PlaylistId -> Playlist.PlaylistId
+9. Track.MediaTypeId -> MediaType.MediaTypeId
+10. Track.GenreId -> Genre.GenreId
+11. Track.AlbumId -> Album.AlbumId
+
+**Exercise 4: SQL queries**
+(a) Select the CustomerId, FirstName, LastName, State, Country of all customers living in California.
+```{r}
+dbGetQuery(chinook_db, 'SELECT CustomerId, FirstName, LastName, State, Country FROM Customer WHERE State = "CA"')
+```
+b) How many customers are from USA?
+```{r}
+dbGetQuery(chinook_db, 'SELECT CustomerId, FirstName, LastName, State, Country FROM Customer WHERE Country = "USA"')
+```
+13 Customers are from the USA
+
+**Exercise 5: SQL queries**
+Choose another table from the database. Write a SQL query and describe in words wat your
+query is doing.
+```{r}
+dbGetQuery(chinook_db, 'SELECT EmployeeId, FirstName, LastName, State, Country FROM Employee')
+```
+This query is showing the Employee ID and First and Last names of the employees, and the state and country in which each of them are.
+
+**Extra Practice Exercises**
+1. Using the course database TinyClothesDB
+a) Write down the schema for each of the relations CUSTOMER, PRODUCT, SALES_ORDER_LINE.
+```{r}
+Tiny_Clothes <- dbConnect(RSQLite::SQLite(), "Tiny_Clothes.sqlite")
+CUSTOMER <- read.csv("Tinyclothes Database Files-20230228/CUSTOMER.txt")
+print(CUSTOMER)
+PRODUCT <- read.csv("Tinyclothes Database Files-20230228/PRODUCT.txt")
+print(PRODUCT)
+SALES_ORDER_LINE <- read.csv("Tinyclothes Database Files-20230228/SALES_ORDER_LINE.txt")
+print(SALES_ORDER_LINE)
+```
+Schema for CUSTOMER:
+CUST_NO
+NAME
+ADDRESS
+
+Schema for PRODUCT:
+PROD_NO
+NAME
+COLOR
+
+Schema for SALES_ORDER_LINE:
+ORDER_NO
+PROD_NO
+QUANTITY
+
+b) Identify the primary key for each relation and any foreign keys for each relation.
+
+CUSTOMER:
+primary key: CUST_NO
+foreign key: none
+
+PRODUCT:
+primary key: PROD_NO
+foreign key: none
+
+SALES_ORDER_LINE:
+primary key: ORDER_NO
+foreign key: PROD_NO
+
+c) Suggest suitable domain for each attribute of PRODUCT.
+PROD_NO: (1,inf)
+NAME: {PANTS, SOCKS, SHIRTS}
+COLOR: {BLUE, KHAKI, GREEN, WHITE}
+
+2. Find the age of the oldest employee at ‘Tiny Clothes’
+```{r}
+print(EMPLOYEE)
+dbGetQuery(Tiny_Clothes, 'SELECT AGE FROM EMPLOYEE ORDER BY AGE DESC limit 1')
+# oldest employee is 65
+```
+3. Are there any employees under the age of 50 whose name contains the letter ‘R’?
+```{r}
+dbGetQuery(Tiny_Clothes, 'SELECT NAME FROM EMPLOYEE WHERE AGE < 50')
+# No, there are no employees under the age of 50 whose name contains the letter ‘R
+```
+4. Retrieve the employment number of the sales department manager.
+```{r}
+print(DEPARTMENT)
+dbGetQuery(Tiny_Clothes, 'SELECT MANAGER FROM DEPARTMENT WHERE NAME = "Sales"')
+# employment number is E5
+```
+5. How many departments are there at ‘Tiny Clothes’ ?
+```{r}
+print(DEPARTMENT)
+# 3 departments
+```
+6. What is Carol’s customer number?
+```{r}
+print(CUSTOMER)
+dbGetQuery(Tiny_Clothes, 'SELECT CUST_NO, NAME FROM CUSTOMER WHERE NAME = "CAROL"')
+# Carol's customer number is C3
+```
+7. Who works in Department D2?
+```{r}
+print(EMPLOYEE)
+dbGetQuery(Tiny_Clothes, 'SELECT EMP_NO, NAME, DEPT_NO FROM EMPLOYEE WHERE DEPT_NO = "D2"')
+# Brown works in D2
+```
+8. Should Tiny Clothes sell PINK SOCKS? How would you answer if you were asked this question by a non-technical manager?
+```{r}
+print(PRODUCT)
+print(SALES_ORDER_LINE)
+# no they shouldn't sell pink socks since so far they only sell blue and green clothes, and not very many socks
+```
+9. Retrieve the employment number of the sales department manager.
+```{r}
+print(DEPARTMENT)
+dbGetQuery(Tiny_Clothes, 'SELECT MANAGER FROM DEPARTMENT WHERE DEPT_NO = "D3"')
+# sales department manager's employment number is E5
+```
+
